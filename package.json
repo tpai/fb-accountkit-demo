@@ -1,0 +1,22 @@
+{
+  "name": "accountkit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "authServer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node authServer.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "guid": "^0.0.12",
+    "mustache": "^2.2.1",
+    "path": "^0.12.7",
+    "querystring": "^0.2.0",
+    "request": "^2.74.0"
+  }
+}

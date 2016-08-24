@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- HTTPS required. HTTP will give a 403 forbidden response -->
+    <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <form id="my_form" action="/sendcode" method="POST">
+            <div class="form-group">
+                <label for="country_code">Enter country code (e.g. +1):</label>
+                <input type="text" id="country_code" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="phone_num">Enter phone number without spaces (e.g. 444555666):</label>
+                <input type="text" id="phone_num" class="form-control" />
+                <button type="button" class="btn btn-default" onclick="phone_btn_onclick();">Login via SMS</button>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Enter email address</label>
+                <input type="text" id="email" class="form-control" />
+                <button type="button" class="btn btn-default" onclick="email_btn_onclick();">Login via Email</button>
+            </div>
+            <input type="hidden" id="code" name="code" value="" />
+            <input type="hidden" id="csrf_nonce" name="csrf_nonce" value="" />
+        </form>
+    </div>
+    <script>
+      // initialize Account Kit with CSRF protection
+      AccountKit_OnInteractive = function(){
+        AccountKit.init(
+          {
+            appId:{{appId}}, 
+            state:"{{csrf}}", 
+            version:"{{version}}"
+          }
+        );
+      };
+
+      // login callback
+      function loginCallback(response) {
+          console.log(response);
+        if (response.status === "PARTIALLY_AUTHENTICATED") {
+          document.getElementById("code").value = response.code;
+          document.getElementById("csrf_nonce").value = response.state;
+          document.getElementById("my_form").submit();
+        }
+        else if (response.status === "NOT_AUTHENTICATED") {
+          // handle authentication failure
+        }
+        else if (response.status === "BAD_PARAMS") {
+          // handle bad parameters
+        }
+      }
+
+      // phone form submission handler
+      function phone_btn_onclick() {
+        var country_code = document.getElementById("country_code").value;
+        var ph_num = document.getElementById("phone_num").value;
+        AccountKit.login('PHONE', 
+          {countryCode: country_code, phoneNumber: ph_num}, // will use default values if this is not specified
+          loginCallback);
+      }
+
+
+      // email form submission handler
+      function email_btn_onclick() {
+        var email_address = document.getElementById("email").value;
+
+        AccountKit.login('EMAIL', {emailAddress: email_address}, loginCallback);
+      }
+
+    </script>
+</body>
+</html>
