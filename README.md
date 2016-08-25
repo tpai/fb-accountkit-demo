@@ -7,7 +7,15 @@ Implement facebook account kit service into node server. (https://developers.fac
 
 2) Add account kit product
 
-3) Copy .env.example to .env and fill it up
+Be sure to add platform, pick website and put in URL.
+
+For example:
+
+```
+http://localhost:8080
+```
+
+3) Fill up .env
 
 ```
 APP_ID=[YOUR_APP_ID]
@@ -21,4 +29,4 @@ npm i
 npm start
 ```
 
-5) Done and try
+5) Done
